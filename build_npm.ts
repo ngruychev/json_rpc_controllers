@@ -8,7 +8,7 @@ import {
 } from "https://deno.land/std@0.140.0/path/mod.ts";
 import { copy } from "https://deno.land/std@0.140.0/fs/mod.ts";
 
-const VERSION = "0.0.5";
+const VERSION = "0.0.6";
 
 console.log(`Building version ${VERSION}`);
 
@@ -144,6 +144,9 @@ await Deno.writeTextFile(
 
 console.log("Copying tsconfig.node.json...");
 await copy("./tsconfig.node.json", "./npm/tsconfig.json");
+
+console.log("Copying README.md...");
+await copy("./README.md", "./npm/README.md");
 
 console.log("Running npm install...");
 const installProcess = Deno.run({

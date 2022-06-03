@@ -3,7 +3,7 @@ import {
   JsonRpcMethod,
   JsonRpcValidatedMethod,
   JsonRpcError,
-} from "https://deno.land/x/json_rpc_controllers@0.0.5/server.ts";
+} from "https://deno.land/x/json_rpc_controllers@0.0.6/server.ts";
 
 @JsonRpcController
 export class MyService {

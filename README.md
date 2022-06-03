@@ -1,5 +1,7 @@
 # json_rpc_controllers
 
+![npm](https://img.shields.io/npm/v/@ngruychev/json_rpc_controllers?style=flat-square)
+
 A deno/typescript library to make using JSON-RPC easier via OOP.
 
 ## Usage:
