@@ -1,0 +1,25 @@
+{
+  "deno.enable": true,
+  "deno.lint": true,
+  "deno.unstable": true,
+  "deno.suggest.imports.hosts": {
+    "https://deno.land": true,
+    "https://x.nest.land": true,
+    "https://crux.land": true,
+    "https://cdn.skypack.dev": true
+  },
+  "deno.suggest.imports.autoDiscover": true,
+  "deno.suggest.autoImports": true,
+  "deno.enablePaths": [
+    "./src/",
+    "./examples/deno/",
+    "./build_npm.ts",
+    "./client.ts",
+    "./server.ts",
+    "./mod.ts"
+  ],
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "files.insertFinalNewline": true
+}
