@@ -8,8 +8,9 @@ import {
 // deno-lint-ignore no-explicit-any
 type FnToAsync<T extends (...args: any[]) => any> = (
   ...args: Parameters<T>
-// deno-lint-ignore no-explicit-any
-) => ReturnType<T> extends Promise<any> ? ReturnType<T> : Promise<ReturnType<T>>;
+  // deno-lint-ignore no-explicit-any
+) => ReturnType<T> extends Promise<any> ? ReturnType<T>
+  : Promise<ReturnType<T>>;
 
 type FlagNonMethods<T> = {
   // deno-lint-ignore no-explicit-any
