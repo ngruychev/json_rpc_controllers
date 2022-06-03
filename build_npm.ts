@@ -8,7 +8,7 @@ import {
 } from "https://deno.land/std@0.140.0/path/mod.ts";
 import { copy } from "https://deno.land/std@0.140.0/fs/mod.ts";
 
-const VERSION = "0.0.6";
+const VERSION = "0.0.7";
 
 console.log(`Building version ${VERSION}`);
 
@@ -133,6 +133,16 @@ const packageJson = {
   scripts: {
     "tsc": "tsc",
   },
+  keywords: [
+    "json-rpc",
+    "rpc",
+    "json",
+    "remote",
+    "node",
+    "controller",
+    "decorator",
+  ],
+  repository: "github:ngruychev/json_rpc_controllers",
 };
 
 console.log("Writing package.json...");

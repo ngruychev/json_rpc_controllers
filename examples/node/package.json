@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@ngruychev/json_rpc_controllers": "^0.0.6"
+    "@ngruychev/json_rpc_controllers": "^0.0.7"
   },
   "devDependencies": {
     "typescript": "^4.7.2",
