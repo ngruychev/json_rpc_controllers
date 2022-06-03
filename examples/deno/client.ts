@@ -3,7 +3,7 @@ import {
   createHttpJsonRpcProxy,
   createWebsocketJsonRpcProxy,
   JsonRpcError,
-} from "https://deno.land/x/json_rpc_controllers@0.0.2/client.ts";
+} from "https://deno.land/x/json_rpc_controllers@0.0.3/client.ts";
 import type { MyService } from "./MyService.ts";
 
 const httpProxy = createHttpJsonRpcProxy<MyService>("http://localhost:3000");
