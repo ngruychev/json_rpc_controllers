@@ -1,14 +1,13 @@
 import { emptyDir } from "https://deno.land/x/dnt@0.24.0/mod.ts";
 import { transform } from "https://deno.land/x/dnt@0.24.0/transform.ts";
 import {
-  basename,
   common,
   dirname,
   join,
 } from "https://deno.land/std@0.140.0/path/mod.ts";
 import { copy } from "https://deno.land/std@0.140.0/fs/mod.ts";
 
-const VERSION = "0.0.9";
+const VERSION = "0.0.10";
 
 console.log(`Building version ${VERSION}`);
 
@@ -55,6 +54,55 @@ const outputResult = await transform({
         exportName: "WebSocketServer",
       }],
     },
+    {
+      package: {
+        name: "@deno/shim-crypto",
+        version: "~0.3.0",
+      },
+      globalNames: [
+        "crypto",
+        ...[
+          "Crypto",
+          "SubtleCrypto",
+          "AlgorithmIdentifier",
+          "Algorithm",
+          "RsaOaepParams",
+          "BufferSource",
+          "AesCtrParams",
+          "AesCbcParams",
+          "AesGcmParams",
+          "CryptoKey",
+          "KeyAlgorithm",
+          "KeyType",
+          "KeyUsage",
+          "EcdhKeyDeriveParams",
+          "HkdfParams",
+          "HashAlgorithmIdentifier",
+          "Pbkdf2Params",
+          "AesDerivedKeyParams",
+          "HmacImportParams",
+          "JsonWebKey",
+          "RsaOtherPrimesInfo",
+          "KeyFormat",
+          "RsaHashedKeyGenParams",
+          "RsaKeyGenParams",
+          "BigInteger",
+          "EcKeyGenParams",
+          "NamedCurve",
+          "CryptoKeyPair",
+          "AesKeyGenParams",
+          "HmacKeyGenParams",
+          "RsaHashedImportParams",
+          "EcKeyImportParams",
+          "AesKeyAlgorithm",
+          "RsaPssParams",
+          "EcdsaParams",
+        ].map((name) => ({
+          name,
+          typeOnly: true,
+        })),
+      ],
+    },
   ],
   mappings: {
     "./src/deps.ts": "./src/deps.node.ts",
@@ -73,33 +121,15 @@ outputResult.main.files = outputResult.main.files.filter((file) =>
   !(common([`./${file.filePath}`, "./deps/deno.land/"]) === "./deps/deno.land/")
 );
 
-// fix/hack for https://github.com/denoland/dnt/issues/154
-for (
-  const fileName of outputResult.main.files.map(({ filePath }) =>
-    basename(filePath)
-  )
-) {
-  const filenameWithJsExt = fileName.replace(/\.ts$/, ".js");
-  for (const file of outputResult.main.files) {
-    console.log(
-      `Replacing imports of ${filenameWithJsExt} with imports for ${fileName} in ${file.filePath}`,
-    );
-    file.fileText = file.fileText.replaceAll(
-      filenameWithJsExt,
-      fileName.replace(/\.ts$/, ""),
-    );
-  }
-}
-
 for (const file of outputResult.main.files) {
-  let text = file.fileText;
-  // remove lines after a comment with "// dnt-node-remove-line"
-  text = text.replace(/^\s*\/\/\s*dnt-node-remove-line\s*\n.*$/gm, "");
-  // uncomment line after a comment with "// dnt-node-uncomment-line"
-  text = text.replace(
-    /^\s*\/\/\s*dnt-node-uncomment-line\s*\n\s*\/\/\s{0,1}/gm,
-    "",
-  );
+  const text = file.fileText
+    // remove lines after a comment with "// dnt-node-remove-line"
+    .replace(/^\s*\/\/\s*dnt-node-remove-line\s*\n.*$/gm, "")
+    // uncomment line after a comment with "// dnt-node-uncomment-line"
+    .replace(
+      /^\s*\/\/\s*dnt-node-uncomment-line\s*\n\s*\/\/\s{0,1}/gm,
+      "",
+    );
   await Deno.mkdir(join("./npm", dirname(file.filePath)), { recursive: true });
   const path = join("./npm", file.filePath);
   await Deno.writeTextFile(path, text);
