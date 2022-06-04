@@ -14,6 +14,7 @@ export function serveJsonRpcHttp(
   service: JsonRpcController,
   serveOptions: {
     port?: number;
+    cors?: boolean;
   },
 ): Promise<void> {
   const isService =
@@ -25,9 +26,16 @@ export function serveJsonRpcHttp(
   }
 
   const server = createServer((req, res) => {
-    if (req.method !== "POST") {
+    if (req.method !== "POST" && req.method !== "OPTIONS") {
       res.writeHead(405, {
         "Content-Type": "application/json",
+        ...(serveOptions.cors
+          ? {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+          }
+          : {}),
       });
       res.end(JSON.stringify({
         jsonrpc: "2.0",
@@ -39,6 +47,20 @@ export function serveJsonRpcHttp(
         id: null,
       }));
     }
+    if (req.method === "OPTIONS") {
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+        ...(serveOptions.cors
+          ? {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+          }
+          : {}),
+      });
+      res.end();
+      return;
+    }
     let body = "";
     req.on("data", (chunk) => {
       body += chunk;
@@ -48,6 +70,13 @@ export function serveJsonRpcHttp(
       if (resp === undefined) {
         res.writeHead(204, {
           "Content-Type": "application/json",
+          ...(serveOptions.cors
+            ? {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST, OPTIONS",
+              "Access-Control-Allow-Headers": "Content-Type",
+            }
+            : {}),
         });
         res.end();
         return;
@@ -57,6 +86,13 @@ export function serveJsonRpcHttp(
         : 200;
       res.writeHead(status, {
         "Content-Type": "application/json",
+        ...(serveOptions.cors
+          ? {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+          }
+          : {}),
       });
       res.end(JSON.stringify(resp));
     });

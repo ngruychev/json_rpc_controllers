@@ -7,8 +7,9 @@ import { JsonRpcController, JsonRpcErrorCode } from "./core/types.ts";
 async function serveRegularRequest(
   service: JsonRpcController,
   req: Request,
+  cors = false,
 ): Promise<Response> {
-  if (req.method !== "POST") {
+  if (req.method !== "POST" && req.method !== "OPTIONS") {
     return new Response(
       JSON.stringify({
         jsonrpc: "2.0",
@@ -23,9 +24,31 @@ async function serveRegularRequest(
         status: 405,
         headers: {
           "Content-Type": "application/json",
+          ...(cors
+            ? {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST, OPTIONS",
+              "Access-Control-Allow-Headers": "Content-Type",
+            }
+            : {}),
         },
       },
     );
+  }
+  if (req.method === "OPTIONS") {
+    return new Response("", {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        ...(cors
+          ? {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+          }
+          : {}),
+      },
+    });
   }
   const bodyStr = await req.text();
   const resp = await handleRequest(service, bodyStr);
@@ -42,6 +65,13 @@ async function serveRegularRequest(
         : 200,
       headers: {
         "Content-Type": "application/json",
+        ...(cors
+          ? {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+          }
+          : {}),
       },
     },
   );
@@ -67,6 +97,7 @@ export async function serveJsonRpcHttp(
   service: JsonRpcController,
   serveOptions: {
     port?: number;
+    cors?: boolean;
   },
 ) {
   const isService =
@@ -78,8 +109,10 @@ export async function serveJsonRpcHttp(
   }
   await serve(async (req) => {
     if (req.headers.get("upgrade") !== "websocket") {
-      return await serveRegularRequest(service, req);
+      return await serveRegularRequest(service, req, serveOptions.cors);
     }
     return serveWebsocket(service, req);
-  }, serveOptions);
+  }, {
+    port: serveOptions.port,
+  });
 }

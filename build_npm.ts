@@ -7,7 +7,9 @@ import {
 } from "https://deno.land/std@0.140.0/path/mod.ts";
 import { copy } from "https://deno.land/std@0.140.0/fs/mod.ts";
 
-const VERSION = "0.0.10";
+import { bundle } from "https://deno.land/x/emit@0.2.0/mod.ts";
+
+const VERSION = "0.0.11";
 
 console.log(`Building version ${VERSION}`);
 
@@ -149,6 +151,7 @@ const packageJson = {
     "Create class-based JSON-RPC services and use them seamlessly on the client-side",
   main: "./mod.js",
   types: "./mod.d.ts",
+  browser: "./browser.js",
   exports: {
     ".": "./mod.js",
     "./client": "./client.js",
@@ -211,5 +214,10 @@ try {
 } finally {
   tscProcess.close();
 }
+
+console.log("Bundling browser.js...");
+const browserBundle = await bundle("./client.ts");
+await Deno.writeTextFile("./npm/browser.js", browserBundle.code);
+await copy("./npm/client.d.ts", "./npm/browser.d.ts");
 
 console.log("All done!");
