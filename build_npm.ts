@@ -8,7 +8,7 @@ import {
 } from "https://deno.land/std@0.140.0/path/mod.ts";
 import { copy } from "https://deno.land/std@0.140.0/fs/mod.ts";
 
-const VERSION = "0.0.8";
+const VERSION = "0.0.9";
 
 console.log(`Building version ${VERSION}`);
 
