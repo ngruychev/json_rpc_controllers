@@ -53,7 +53,7 @@ async function handleSingleRequest(
     );
   }
 
-  const isNotification = !("id" in request) && request.id !== undefined;
+  const isNotification = !("id" in request);
 
   if (
     !Reflect.getMetadata(JSON_RPC_METHODS_KEY, service).includes(
