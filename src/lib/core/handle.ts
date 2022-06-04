@@ -129,13 +129,12 @@ async function handleBatchRequest(
       "The JSON sent is not a valid Request object.",
     );
   }
-  const responses: JsonRpcBatchResponse = [];
-  for (const item of request) {
-    const response = await handleSingleRequest(service, item);
-    if (response) {
-      responses.push(response);
-    }
-  }
+  const responses = (await Promise.all(
+    request
+      .map((item) => handleSingleRequest(service, item)),
+  ))
+    .filter((x) => x !== undefined)
+    .map((x) => x as JsonRpcSingleResponse);
   return responses;
 }
 
