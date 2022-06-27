@@ -1,9 +1,10 @@
 import {
   JsonRpcController,
-  JsonRpcMethod,
-  JsonRpcValidatedMethod,
   JsonRpcError,
+  JsonRpcMethod,
+  JsonRpcZodValidatedMethod,
 } from "@ngruychev/json_rpc_controllers/server";
+import { z } from "zod";
 
 @JsonRpcController()
 export class MyService {
@@ -23,12 +24,10 @@ export class MyService {
     return a + b;
   }
 
-  @JsonRpcValidatedMethod((z) =>
-    z.tuple([z.object({
-      minuend: z.number(),
-      subtrahend: z.number(),
-    })])
-  )
+  @JsonRpcZodValidatedMethod(z.tuple([z.object({
+    minuend: z.number(),
+    subtrahend: z.number(),
+  })]))
   subtract({
     minuend,
     subtrahend,

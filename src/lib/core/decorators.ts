@@ -24,11 +24,10 @@ export function JsonRpcMethod(): MethodDecorator {
 }
 
 // deno-lint-ignore no-explicit-any
-export function JsonRpcValidatedMethod<T extends zod.ZodTuple<any, any>>(
-  validator: (z: typeof zod) => T,
+export function JsonRpcZodValidatedMethod<T extends zod.ZodTuple<any, any>>(
+  validator: T,
 ) {
-  const schema = validator(zod);
-  type X = zod.infer<typeof schema>;
+  type X = zod.infer<typeof validator>;
 
   // deno-lint-ignore no-explicit-any
   type Fn = (...args: any[]) => any;
@@ -42,6 +41,6 @@ export function JsonRpcValidatedMethod<T extends zod.ZodTuple<any, any>>(
       methods.push(key);
     }
     Reflect.defineMetadata(JSON_RPC_METHODS_KEY, methods, target);
-    Reflect.defineMetadata(JSON_RPC_VALIDATOR_KEY, schema, target, key);
+    Reflect.defineMetadata(JSON_RPC_VALIDATOR_KEY, validator, target, key);
   };
 }

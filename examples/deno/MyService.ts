@@ -1,9 +1,10 @@
 import {
   JsonRpcController,
-  JsonRpcMethod,
-  JsonRpcValidatedMethod,
   JsonRpcError,
+  JsonRpcMethod,
+  JsonRpcZodValidatedMethod,
 } from "../../server.ts";
+import { z } from "https://cdn.skypack.dev/zod@3.17.3?dts";
 
 @JsonRpcController()
 export class MyService {
@@ -23,12 +24,10 @@ export class MyService {
     return a + b;
   }
 
-  @JsonRpcValidatedMethod((z) =>
-    z.tuple([z.object({
-      minuend: z.number(),
-      subtrahend: z.number(),
-    })])
-  )
+  @JsonRpcZodValidatedMethod(z.tuple([z.object({
+    minuend: z.number(),
+    subtrahend: z.number(),
+  })]))
   subtract({
     minuend,
     subtrahend,
