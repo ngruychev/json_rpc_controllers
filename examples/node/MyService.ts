@@ -5,7 +5,7 @@ import {
   JsonRpcError,
 } from "@ngruychev/json_rpc_controllers/server";
 
-@JsonRpcController
+@JsonRpcController()
 export class MyService {
   @JsonRpcMethod()
   hello(name: string) {

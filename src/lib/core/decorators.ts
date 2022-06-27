@@ -7,8 +7,10 @@ export const JSON_RPC_VALIDATOR_KEY = Symbol("json-rpc-validator");
 // deno-lint-ignore no-explicit-any
 type Constructor<T = unknown> = new (...args: any[]) => T;
 
-export function JsonRpcController<T>(target: Constructor<T>) {
-  Reflect.defineMetadata(JSON_RPC_SERVICE_KEY, true, target);
+export function JsonRpcController<T>() {
+  return (target: Constructor<T>) => {
+    Reflect.defineMetadata(JSON_RPC_SERVICE_KEY, true, target);
+  };
 }
 
 export function JsonRpcMethod(): MethodDecorator {

@@ -1,5 +1,5 @@
 import { MyService } from "./MyService.ts";
-import { serveJsonRpcHttp } from "https://deno.land/x/json_rpc_controllers/server.ts";
+import { serveJsonRpcHttp } from "../../server.ts";
 
 const ms = new MyService();
 await serveJsonRpcHttp(ms, {
