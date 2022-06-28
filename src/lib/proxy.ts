@@ -149,3 +149,19 @@ export function createWebsocketJsonRpcProxy<T extends JsonRpcController>(
 export function closeWebsocketJsonRpcProxy<T>(proxy: JsonRpcProxy<T>) {
   proxy[WEBSOCKET_PROXY_CLOSE_KEY]();
 }
+
+export function createLocalInstanceJsonRpcProxy<T extends JsonRpcController>(
+  instance: T,
+): JsonRpcProxy<T> {
+  return new Proxy({} as unknown as T, {
+    get: (_target, key) => {
+      return (({
+        async [key](...params: unknown[]) {
+          // deno-lint-ignore no-explicit-any
+          return await (instance as any)[key](...params);
+        },
+        // deno-lint-ignore no-explicit-any
+      }) as any)[key];
+    },
+  }) as unknown as JsonRpcProxy<T>;
+}

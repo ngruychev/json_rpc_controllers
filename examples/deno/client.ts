@@ -1,6 +1,7 @@
 import {
   closeWebsocketJsonRpcProxy,
   createHttpJsonRpcProxy,
+  createLocalInstanceJsonRpcProxy,
   createWebsocketJsonRpcProxy,
   JsonRpcError,
 } from "../../client.ts";
@@ -28,7 +29,7 @@ console.log(
   await httpProxy.subtract({
     minuend: 1,
     subtrahend: 2,
-  }),
+  }), 
 );
 
 const wsProxy = createWebsocketJsonRpcProxy<MyService>("ws://localhost:3000");
@@ -45,3 +46,12 @@ await Promise.all([
 
 // if you don't close a websocket proxy, it can keep your program running forever
 closeWebsocketJsonRpcProxy(wsProxy);
+
+class MyS {
+  hello(name: string): string {
+    return `Hello ${name}`;
+  }
+}
+
+const lProxy = createLocalInstanceJsonRpcProxy<MyS>(new MyS());
+lProxy.hello("world").then((result) => console.log(result));

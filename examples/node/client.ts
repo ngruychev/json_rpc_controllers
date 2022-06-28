@@ -1,6 +1,7 @@
 import {
   closeWebsocketJsonRpcProxy,
   createHttpJsonRpcProxy,
+  createLocalInstanceJsonRpcProxy,
   createWebsocketJsonRpcProxy,
   JsonRpcError,
 } from "@ngruychev/json_rpc_controllers/client";
@@ -46,6 +47,15 @@ async function main() {
 
   // if you don't close a websocket proxy, it can keep your program running forever
   closeWebsocketJsonRpcProxy(wsProxy);
+
+  class MyS {
+    hello(name: string): string {
+      return `Hello ${name}`;
+    }
+  }
+
+  const lProxy = createLocalInstanceJsonRpcProxy<MyS>(new MyS());
+  lProxy.hello("world").then((result) => console.log(result));
 }
 
 main().catch((e) => console.error(e));

@@ -1,6 +1,7 @@
 export {
   closeWebsocketJsonRpcProxy,
   createHttpJsonRpcProxy,
+  createLocalInstanceJsonRpcProxy,
   createWebsocketJsonRpcProxy,
 } from "./src/lib/proxy.ts";
 export type { JsonRpcProxy } from "./src/lib/proxy.ts";
