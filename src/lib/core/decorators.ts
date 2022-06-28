@@ -52,7 +52,7 @@ export function JsonRpcZodValidatedMethod<T extends zod.ZodTuple<any, any>>(
       ) as (params: unknown) => boolean;
       Reflect.defineMetadata(
         JSON_RPC_VALIDATOR_KEY,
-        (...args: unknown[]) => oldValidator(args) && validatorFn(args),
+        (params: unknown[]) => oldValidator(params) && validatorFn(params),
         target,
         key,
       );

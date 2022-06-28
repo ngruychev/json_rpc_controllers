@@ -9,7 +9,7 @@ import { copy } from "https://deno.land/std@0.140.0/fs/mod.ts";
 
 import { bundle } from "https://deno.land/x/emit@0.2.0/mod.ts";
 
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 
 console.log(`Building version ${VERSION}`);
 
