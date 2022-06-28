@@ -1,4 +1,4 @@
-import { Reflect, zod } from "../../deps.ts";
+import { Reflect } from "../../deps.ts";
 import { JSON_RPC_METHODS_KEY, JSON_RPC_VALIDATOR_KEY } from "./decorators.ts";
 
 import {
@@ -76,10 +76,10 @@ async function handleSingleRequest(
     JSON_RPC_VALIDATOR_KEY,
     service,
     request.method,
-  ) as zod.Schema | undefined;
+  ) as (params: unknown) => boolean;
   if (
     typeof request.params !== "object" || request.params === null ||
-    (validator && !validator.safeParse(request.params).success)
+    (validator && !validator(request.params))
   ) {
     return isNotification ? undefined : error(
       request.id!,

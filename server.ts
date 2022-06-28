@@ -1,5 +1,6 @@
 export { JsonRpcError } from "./src/lib/core/types.ts";
 export {
+  JsonRpcAjvValidatedMethod,
   JsonRpcController,
   JsonRpcMethod,
   JsonRpcZodValidatedMethod,

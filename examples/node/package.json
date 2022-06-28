@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "@ngruychev/json_rpc_controllers": "^0.0.7"
+    "@ngruychev/json_rpc_controllers": "^0.0.7",
+    "ajv": "^3.17.3",
+    "zod": "^8.11.0"
   },
   "devDependencies": {
     "typescript": "^4.7.2",

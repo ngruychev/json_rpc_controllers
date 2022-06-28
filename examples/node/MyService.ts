@@ -1,10 +1,33 @@
 import {
+  JsonRpcAjvValidatedMethod,
   JsonRpcController,
   JsonRpcError,
   JsonRpcMethod,
   JsonRpcZodValidatedMethod,
 } from "@ngruychev/json_rpc_controllers/server";
+import Ajv from "ajv";
 import { z } from "zod";
+
+const schema = {
+  $schema: "http://json-schema.org/draft-07/schema",
+  type: "array",
+  items: [
+    {
+      type: "object",
+      properties: {
+        minuend: {
+          type: "number",
+        },
+        subtrahend: {
+          type: "number",
+        },
+      },
+      required: ["minuend", "subtrahend"],
+    },
+  ],
+} as const;
+
+const ajv = new Ajv();
 
 @JsonRpcController()
 export class MyService {
@@ -28,6 +51,7 @@ export class MyService {
     minuend: z.number(),
     subtrahend: z.number(),
   })]))
+  @JsonRpcAjvValidatedMethod(ajv, schema)
   subtract({
     minuend,
     subtrahend,
